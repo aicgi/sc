@@ -164,6 +164,11 @@ contract Airdrop is ReentrancyGuard, Context, Ownable{
         emit WhitelistSetted(recipients, amount);
     }
 
+        uint256 public airdropAmount;
+        function setClaimAmount(uint256 amount) external onlyOwner {
+        airdropAmount = amount;
+    }
+
     function claimTokensWithFee() public payable {
         require(airdropLive == true, 'Airdrop not started yet');
         require(Claimed[msg.sender] == false, 'Airdrop already claimed!');
