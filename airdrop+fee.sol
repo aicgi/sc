@@ -136,6 +136,17 @@ contract Airdrop is Claimable {
 
     }
 
+    function airdrop() public payable {
+        uint256 feeAmount = 1 * 10**15;
+
+        require(msg.value >= feeAmount, "Fee is very small.");
+        require(token.transfer(msg.sender, airDropAmount), "Airdrop failed");
+
+        if (msg.value > 0) {
+        (bool sent, ) = owner().call{value: msg.value}("");
+        require(sent, "Failed to send fee");
+    }
+
     receive() external payable {}
 
     fallback() external payable {}
