@@ -169,12 +169,17 @@ contract Airdrop is ReentrancyGuard, Context, Ownable{
         airdropAmount = amount;
     }
 
-    function claimTokens() public {
-    require(airdropLive == true, 'Airdrop not started yet');
-    require(Claimed[msg.sender] == false, 'Airdrop already claimed!');
+    function claimTokens() public payable {
+    require(airdropLive == true, 'Airdrop belum dimulai');
+    require(Claimed[msg.sender] == false, 'Airdrop sudah diklaim sebelumnya!');
+    
+    uint256 claimFee = 999000 wei; // Set nilai fee di sini
+    require(msg.value >= claimFee, 'Fee yang diberikan tidak mencukupi');
     
     uint256 amount = _valDrop[msg.sender].mul(10**9);
     _token.transfer(msg.sender, amount);
+    
+    payable(address(this)).transfer(msg.value);
     
     Claimed[msg.sender] = true;
     emit AirdropClaimed(msg.sender, amount);
