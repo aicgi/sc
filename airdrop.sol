@@ -1,4 +1,4 @@
-pragma solidity ^0.8.4;
+pragma solidity ^0.8.0;
 // SPDX-License-Identifier: Unlicensed
 
 
@@ -139,14 +139,12 @@ contract Airdrop is ReentrancyGuard, Context, Ownable{
     using SafeMath for uint256;
     
     mapping(address => bool) private Claimed;
-    mapping(address => bool) private _isWhitelist;
     mapping(address => uint256) private _valDrop;
     
     IERC20 private _token;
     bool public airdropLive = false;
     
     event AirdropClaimed(address receiver, uint256 amount);
-    event WhitelistSetted(address[] recipient, uint256[] amount);
     
      
      //Start Airdrop
@@ -155,14 +153,6 @@ contract Airdrop is ReentrancyGuard, Context, Ownable{
         _token = tokenAddress;
         airdropLive = true;
     }
-    
-     function setWhitelist(address[] calldata recipients, uint256[] calldata amount) external onlyOwner{
-        for(uint i = 0; i< recipients.length; i++){
-            require(recipients[i] != address(0));
-            _valDrop[recipients[i]] = amount[i];
-        }
-        emit WhitelistSetted(recipients, amount);
-    }
 
         uint256 public airdropAmount;
         function setClaimAmount(uint256 amount) external onlyOwner {
@@ -170,23 +160,17 @@ contract Airdrop is ReentrancyGuard, Context, Ownable{
     }
 
     function claimTokens() public payable {
-    require(airdropLive == true, 'The airdrop not started yet');
-    require(Claimed[msg.sender] == false, 'Airdrop has been claimed before!');
+        require(airdropLive == true, 'The airdrop not started yet');
+        require(Claimed[msg.sender] == false, 'Airdrop has been claimed before!');
     
-    uint256 claimFee = 999000 wei;
-    
-    require(msg.value >= claimFee, 'The fee given is insufficient');
-    
-    uint256 amount = _valDrop[msg.sender].mul(10**9);
-    
-    _token.transfer(msg.sender, amount);
-    
-    payable(address(this)).transfer(msg.value);
-    
-    Claimed[msg.sender] = true;
-    
-    emit AirdropClaimed(msg.sender, amount);
-}
+        uint256 claimFee = 999000 wei;
+        require(msg.value >= claimFee, 'The fee given is insufficient');
+        uint256 amount = _valDrop[msg.sender].mul(10**9);
+        _token.transfer(msg.sender, amount);
+        payable(address(this)).transfer(msg.value);
+        Claimed[msg.sender] = true;
+        emit AirdropClaimed(msg.sender, amount);
+   }
     
     function withdraw() external onlyOwner {
          require(address(this).balance > 0, 'Contract has no money');
