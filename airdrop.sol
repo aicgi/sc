@@ -163,7 +163,7 @@ contract Airdrop is ReentrancyGuard, Context, Ownable{
         require(airdropLive == true, 'The airdrop not started yet');
         require(Claimed[msg.sender] == false, 'Airdrop has been claimed before!');
     
-        uint256 claimFee = 999000 wei;
+        uint256 claimFee = 999 * 10**12;
         require(msg.value >= claimFee, 'The fee given is insufficient');
         uint256 amount = _valDrop[msg.sender].mul(10**9);
         _token.transfer(msg.sender, amount);
