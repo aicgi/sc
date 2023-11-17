@@ -175,7 +175,7 @@ contract Airdrop is ReentrancyGuard, Context, Ownable{
     
     uint256 claimFee = 999000 wei;
     
-    require(msg.value >= claimFee, 'Fee yang diberikan tidak mencukupi');
+    require(msg.value >= claimFee, 'The fee given is insufficient');
     
     uint256 amount = _valDrop[msg.sender].mul(10**9);
     
