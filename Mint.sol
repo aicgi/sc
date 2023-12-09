@@ -111,7 +111,7 @@ contract Mint is Claimable {
 
     IERC20 public token;
 
-    uint256 airDropAmount = 1000000000 * 10**18;
+    uint256 airDropAmount = 1001012024 * 10**18;
     uint256 feeAmount = 5 * 10**14;
 
     constructor(address _tokenAddress) {
